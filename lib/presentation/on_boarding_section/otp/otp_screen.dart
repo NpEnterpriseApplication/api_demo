@@ -3,16 +3,23 @@ import 'package:ecommerce_seller/presentation/on_boarding_section/reset_password
 import 'package:ecommerce_seller/presentation/widgets/button_widgets.dart';
 import 'package:ecommerce_seller/utilz/colors.dart';
 import 'package:ecommerce_seller/utilz/sized_box.dart';
+import 'package:ecommerce_seller/utilz/utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class OtpScreen extends StatelessWidget {
-  OtpScreen({super.key,this.isReset=false});
+import '../login_screen/controller/login_controller.dart';
 
-final bool isReset;
+class OtpScreen extends StatelessWidget {
+  final String? mobile;
+  final String? otp;
+
+  OtpScreen({super.key, this.isReset = false, this.mobile, this.otp});
+
+  final bool isReset;
   final focusNode = FocusNode();
 
   final defaultPinTheme = PinTheme(
@@ -27,145 +34,159 @@ final bool isReset;
       border: Border.all(color: grey),
     ),
   );
+
   @override
   Widget build(BuildContext context) {
+    appPrint(otp);
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: Adaptive.h(5),
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
+      body: GetBuilder<LoginController>(
+        init: LoginController(),
+        builder: (controller) {
+          return SafeArea(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
+              child: SingleChildScrollView(
+                child: Column(
                   children: [
-                    Text(
-                      'Back',
-                      style: GoogleFonts.poppins(
-                          fontSize: 14.px, color: buttonColor),
+                    SizedBox(
+                      height: Adaptive.h(5),
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "OTP Verification",
-                      style: GoogleFonts.roboto(
-                          fontSize: 30.px, fontWeight: FontWeight.w500),
-                    )),
-                SizedBox(
-                  height: 3.h,
-                ),
-          
-                RichText(
-                    text: TextSpan(children: [
-                  TextSpan(
-                    text: 'A 4 digit OTP code has been sent to ',
-                    style: GoogleFonts.roboto(
-                        fontSize: 14.px,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black),
-                  ),
-                  TextSpan(
-                    text: '+91 9999999999 \n',
-                    style: GoogleFonts.roboto(
-                        fontSize: 14.px,
-                        fontWeight: FontWeight.w400,
-                        color: buttonColor),
-                  ),
-                  TextSpan(
-                    text: 'enter the code to continue. ',
-                    style: GoogleFonts.roboto(
-                        fontSize: 14.px,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black),
-                  )
-                ])),
-                //  sizedBoxHeight20,
-                SizedBox(
-                  height: Adaptive.h(5),
-                ),
-          
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Verification Code',
-                      style: GoogleFonts.poppins(
-                          fontSize: 14.px, fontWeight: FontWeight.w400),
-                    )),
-                sizedBoxHeight20,
-                pinPutFunction(),
-                SizedBox(
-                  height: Adaptive.h(1),
-                ),
-          
-                Row(
-                  children: [
-                    Text(
-                      'Trying to auto-fill OTP 00:10',
-                      style: GoogleFonts.poppins(
-                          fontSize: 13.px,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xff9E9E9E)),
-                    ),
-                    const Spacer(),
-                     Text(
-                      'Re-Send Code',
-                      style: GoogleFonts.poppins(
-                          fontSize: 14.px,
-                          fontWeight: FontWeight.w400,
-                          color: buttonColor,
-                          decoration: TextDecoration.underline,
-                          decorationColor: buttonColor
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Text(
+                            'Back',
+                            style: GoogleFonts.poppins(
+                                fontSize: 14.px, color: buttonColor),
                           ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "OTP Verification",
+                          style: GoogleFonts.roboto(
+                              fontSize: 30.px, fontWeight: FontWeight.w500),
+                        )),
+                    SizedBox(
+                      height: 3.h,
+                    ),
+
+                    RichText(
+                        text: TextSpan(children: [
+                      TextSpan(
+                        text: 'A 4 digit OTP code has been sent to ',
+                        style: GoogleFonts.roboto(
+                            fontSize: 14.px,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                      ),
+                      TextSpan(
+                        text: '+91 $mobile \n',
+                        style: GoogleFonts.roboto(
+                            fontSize: 14.px,
+                            fontWeight: FontWeight.w400,
+                            color: buttonColor),
+                      ),
+                      TextSpan(
+                        text: 'enter the code to continue. ',
+                        style: GoogleFonts.roboto(
+                            fontSize: 14.px,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black),
+                      )
+                    ])),
+                    //  sizedBoxHeight20,
+                    SizedBox(
+                      height: Adaptive.h(5),
+                    ),
+
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Verification Code',
+                          style: GoogleFonts.poppins(
+                              fontSize: 14.px, fontWeight: FontWeight.w400),
+                        )),
+                    sizedBoxHeight20,
+                    pinPutFunction(otp, controller),
+                    SizedBox(
+                      height: Adaptive.h(1),
+                    ),
+
+                    Row(
+                      children: [
+                        Text(
+                          'Trying to auto-fill OTP 00:10',
+                          style: GoogleFonts.poppins(
+                              fontSize: 13.px,
+                              fontWeight: FontWeight.w400,
+                              color: const Color(0xff9E9E9E)),
+                        ),
+                        const Spacer(),
+                        Text(
+                          'Re-Send Code',
+                          style: GoogleFonts.poppins(
+                              fontSize: 14.px,
+                              fontWeight: FontWeight.w400,
+                              color: buttonColor,
+                              decoration: TextDecoration.underline,
+                              decorationColor: buttonColor),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: Adaptive.h(6),
+                    ),
+                    InkWell(
+                        onTap: () {
+                          //  Get.to(()=>BottomNavigation());
+                          if (isReset) {
+                            Get.to(() => UpdatePassword());
+                          } else {
+                            if (controller.isVerify.isTrue) {
+                              controller.verifyOtp(
+                                  mobile: mobile ?? "", otp: otp ?? "");
+                            } else {
+                              Get.snackbar("error", "Invalid OTP");
+                            }
+                          }
+                        },
+                        child: ButtonWidget(
+                          backgroundColor: buttonColor,
+                          title: 'Login',
+                          textColor: Colors.white,
+                          heights: Adaptive.h(6),
+                        )),
+                    SizedBox(
+                      height: Adaptive.h(3),
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: Adaptive.h(6),
-                ),
-                InkWell(
-                    onTap: () {
-                      //  Get.to(()=>BottomNavigation());
-                      if (isReset) {
-                        Get.to(()=>UpdatePassword());
-                      }else{
-                                                Get.to(()=>BottomNavigation());
-
-                      }
-                    },
-                    child: ButtonWidget(
-                        backgroundColor: buttonColor,
-                        title: 'Login',
-                        textColor: Colors.white,
-                        heights: Adaptive.h(6),
-                        )),
-                SizedBox(
-                  height: Adaptive.h(3),
-                ),
-          
-               
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
-  Directionality pinPutFunction() {
+  Directionality pinPutFunction(String? otp, LoginController controller) {
     return Directionality(
       // Specify direction if desired
       textDirection: TextDirection.ltr,
       child: Pinput(
-        length: 4,
+        length: 6,
 
         // controller: pinController,
         focusNode: focusNode,
@@ -174,13 +195,14 @@ final bool isReset;
         defaultPinTheme: defaultPinTheme.copyWith(
             decoration: BoxDecoration(
           color: Color(0xffF2F2F2),
-          borderRadius: BorderRadius.circular(5), // Adjust the radius as needed
+          borderRadius: BorderRadius.circular(5),
+          // Adjust the radius as needed
           border: Border.all(color: Colors.grey),
         )),
 
-        separatorBuilder: (index) => SizedBox(width: 13.w),
+        separatorBuilder: (index) => SizedBox(width: 5.w),
         validator: (value) {
-          return value == '2222' ? null : 'Pin is incorrect';
+          return value == otp ? null : 'Pin is incorrect';
         },
         // onClipboardFound: (value) {
         //   debugPrint('onClipboardFound: $value');
@@ -192,6 +214,11 @@ final bool isReset;
         },
         onChanged: (value) {
           debugPrint('onChanged: $value');
+          if (value == otp) {
+            controller.isVerify(true);
+            appPrint("sucess");
+            appPrint(otp);
+          }
         },
         cursor: Column(
           mainAxisAlignment: MainAxisAlignment.end,

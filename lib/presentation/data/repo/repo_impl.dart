@@ -16,4 +16,14 @@ class RepoImpl extends Repository {
   Future<ProductDetailsResponse> productDetails({required String id}) {
     return _dataProvider.productDetails(id: id);
   }
+
+  @override
+  Future<LoginWithMobileResponse> mobileLogIn({required Map<String, dynamic> data}) {
+    return _dataProvider.mobileLogIn(data: data);
+  }
+
+  @override
+  Future<VerifyOtpResponse> verifyOtp({required Map<String, dynamic> data}) {
+    return _dataProvider.verifyOtp(data: data);
+  }
 }

@@ -13,14 +13,14 @@ class DataProvider {
     };
   }
 
-  // String errorMessage(http.Response response) {
-  //   String responseJson = response.body;
-  //   Map<String, dynamic> jsonResponse = jsonDecode(responseJson);
-  //   String errorMessage = jsonResponse["Message"];
-  //   return errorMessage;
-  // }
+  String errorMessage(http.Response response) {
+    String responseJson = response.body;
+    Map<String, dynamic> jsonResponse = jsonDecode(responseJson);
+    String errorMessage = jsonResponse["Message"];
+    return errorMessage;
+  }
 
-//========================= Get Product =======================================
+//========================= Get Product ========================================
 
   Future<GetProductResponse> getProductData() async {
     String url = "${Constants.baseUrl}api/productList/get";
@@ -34,7 +34,7 @@ class DataProvider {
     }
   }
 
-//========================= Get Product Details =======================================
+//========================= Get Product Details ================================
 
   Future<ProductDetailsResponse> productDetails({required String id}) async {
     String url = "${Constants.baseUrl}api/product/getbyId/$id";
@@ -48,4 +48,31 @@ class DataProvider {
     }
   }
 
+//========================= Mobil Login ========================================
+
+  Future<LoginWithMobileResponse> mobileLogIn(
+      {required Map<String, dynamic> data}) async {
+    String url = "${Constants.baseUrl}api/login";
+    var response = await http.post(Uri.parse(url), body: data);
+    if (response.statusCode == 200) {
+      return LoginWithMobileResponse.fromJson(json.decode(response.body));
+    } else {
+      String error = errorMessage(response);
+      throw error;
+    }
+  }
+
+//========================= verify Otp =========================================
+
+  Future<VerifyOtpResponse> verifyOtp(
+      {required Map<String, dynamic> data}) async {
+    String url = "${Constants.baseUrl}api/verify";
+    var response = await http.post(Uri.parse(url), body: data);
+    if (response.statusCode == 200) {
+      return VerifyOtpResponse.fromJson(json.decode(response.body));
+    } else {
+      String error = errorMessage(response);
+      throw error;
+    }
+  }
 }
